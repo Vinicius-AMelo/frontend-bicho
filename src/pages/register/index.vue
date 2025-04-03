@@ -9,6 +9,12 @@
                 @submit="e => onSubmit(e)"
             >
                 <TextInput
+                    v-model="authForm.name"
+                    placeholder="Nome"
+                    type="text"
+                />
+
+                <TextInput
                     v-model="authForm.email"
                     placeholder="Email"
                     type="text"
@@ -46,15 +52,29 @@
 </template>
 
 <script lang="ts" setup>
-import type { AuthLoginFormType } from '~/types/auth';
+import type { AuthRegisterFormType } from '~/types/auth';
 
 async function onSubmit(e: Event) {
     e.preventDefault();
-    await navigateTo('/dashboard');
+    const { data, error, status } = useFetch(
+        'http://localhost:5087/api/auth/register',
+        {
+            method: 'POST',
+            body: JSON.stringify({ ...authForm }),
+            headers: {
+                accept: 'application/json',
+            },
+        },
+    );
+    console.log(data);
+    console.log(error);
+    console.log(status);
+    // await navigateTo('/dashboard');
 }
 
 const remember = ref<boolean>(true);
-const authForm = reactive<AuthFormType>({
+const authForm = reactive<AuthRegisterFormType>({
+    name: '',
     email: '',
     password: '',
 });
