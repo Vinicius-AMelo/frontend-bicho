@@ -54,7 +54,7 @@ async function onSubmit(e: Event) {
 }
 
 const remember = ref<boolean>(true);
-const authForm = reactive<AuthFormType>({
+const authForm = reactive<AuthLoginFormType>({
     email: '',
     password: '',
 });
