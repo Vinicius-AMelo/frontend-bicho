@@ -41,10 +41,10 @@
                 </PrimaryButton>
 
                 <p class="text-white">
-                    Ainda não possui uma conta?
-                    <a class="text-primary-orange underline" href="/login">
-                        Criar conta
-                    </a>
+                    Já possui uma conta?
+                    <NuxtLink class="text-primary-orange underline" to="/login">
+                        Fazer login
+                    </NuxtLink>
                 </p>
             </form>
         </div>
@@ -53,18 +53,19 @@
 
 <script lang="ts" setup>
 import type { AuthRegisterFormType } from '~/types/auth';
+import { useApi } from '~/composables/api';
 
 async function onSubmit(e: Event) {
     e.preventDefault();
-    const { data, error, status } = useFetch(
-        'http://localhost:5087/api/auth/register',
+    const { data, error, status } = await useApi<{ token: string }>(
+        '/auth/register',
         {
             method: 'POST',
-            body: JSON.stringify({ ...authForm }),
+            body: authForm,
             headers: {
                 accept: 'application/json',
             },
-        },
+        }
     );
     console.log(data);
     console.log(error);

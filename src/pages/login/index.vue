@@ -36,9 +36,12 @@
 
                 <p class="text-white">
                     Ainda não possui uma conta?
-                    <a class="text-primary-orange underline" href="/login">
+                    <NuxtLink
+                        class="text-primary-orange underline"
+                        to="/register"
+                    >
                         Criar conta
-                    </a>
+                    </NuxtLink>
                 </p>
             </form>
         </div>
@@ -47,10 +50,29 @@
 
 <script lang="ts" setup>
 import type { AuthLoginFormType } from '~/types/auth';
+import { useApi } from '~/composables/api';
 
 async function onSubmit(e: Event) {
     e.preventDefault();
-    await navigateTo('/dashboard');
+
+    const { data, error, status } = await useApi<{ token: string }>(
+        '/auth/login',
+        {
+            method: 'POST',
+            body: JSON.stringify({ ...authForm }),
+            headers: {
+                accept: 'application/json',
+            },
+        }
+    );
+
+    if (error.value?.statusCode === 401) return console.log(error);
+    if (status.value != 'success') return console.log(error);
+    if (!data.value?.token) return console.log(error);
+
+    const token = useCookie<string>('token', { maxAge: 60 * 15, path: '/' });
+    token.value = data.value.token;
+    return navigateTo('/dashboard');
 }
 
 const remember = ref<boolean>(true);

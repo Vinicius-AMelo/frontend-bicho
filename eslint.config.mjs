@@ -10,6 +10,7 @@ export default withNuxt(
         },
         rules: {
             'prettier/prettier': 'error',
+            'vue/multi-word-component-names': 0,
         },
     },
     eslintConfigPrettier
