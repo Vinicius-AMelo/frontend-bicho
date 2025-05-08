@@ -98,7 +98,6 @@ onUnmounted(() => {
 
 .card {
     transform-style: preserve-3d;
-    //transition: transform 0.8s ease-in-out;
 }
 
 .card.flipped {
@@ -131,5 +130,3 @@ onUnmounted(() => {
     }
 }
 </style>
-//@keyframes rotateCard { // 0% { // transform: rotateY(0deg); // } // 60% { // transform:
-rotateY(1800deg); // } // 100% { // transform: rotateY(1980deg); // } //}

@@ -1,19 +1,21 @@
 ﻿<template>
-    <div>
-        <h2>Sorteio ao vivo</h2>
-
+    <div class="flex flex-col justify-center items-center gap-6">
         <div>
-            <p>Sorteio atual: {{ sorteio.join(', ') || 'Aguardando...' }}</p>
-        </div>
+            <h2 class="text-center">Sorteio ao vivo</h2>
 
-        <AnimatedCards :numbers="sorteio" />
+            <div>
+                <!--            <p>Sorteio atual: {{ sorteio.join(', ') || 'Aguardando...' }}</p>-->
+            </div>
+
+            <AnimatedCards :numbers="sorteio" />
+        </div>
 
         <div>
             <button @click="enviarAposta">Enviar Aposta</button>
             <p>{{ mensagem }}</p>
-        </div>
 
-        <BetSelector :select-bet="selectBet" />
+            <BetSelector :select-bet="selectBet" />
+        </div>
     </div>
 </template>
 
@@ -29,8 +31,13 @@ let connection: HubConnection | null = null;
 const enviarAposta = async () => {
     console.log(aposta.value);
     if (connection && connection.state === 'Connected') {
-        await connection.invoke('CreateBet', aposta.value);
-        mensagem.value = 'Aposta enviada!';
+        try {
+            await connection.invoke('CreateBet', aposta.value, 1);
+            mensagem.value = 'Aposta enviada!';
+        } catch (e) {
+            console.log(e);
+            console.log(e.message);
+        }
     } else {
         mensagem.value = 'Erro ao conectar ao servidor.';
     }
