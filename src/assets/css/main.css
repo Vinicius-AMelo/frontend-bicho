@@ -1,0 +1,32 @@
+﻿@import "tailwindcss";
+
+
+@theme{
+    --font-russo: 'Russo One';
+
+
+    --color-primary-orange: #F87B1B;
+    --color-primary-orange-hover: #DA6207;
+    --color-primary-darkblue: #020035;
+}
+
+@layer base {
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        outline: none;
+        font-family: 'Public Sans', sans-serif;
+    }
+}
+
+@layer components {
+    .gradient {
+        background: radial-gradient(circle, #02066f 0%, #020352 43%, #020247 60%, #020035 100%);
+    }
+
+    .login-paw {
+        background: url('../images/watermark-xs.png') no-repeat center;
+
+    }
+}
