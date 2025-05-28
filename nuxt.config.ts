@@ -27,11 +27,9 @@ export default defineNuxtConfig({
     },
     vite: {
         plugins: [tailwindcss()],
-        // server: {
-        //     allowedHosts: [
-        //         'c2e1-2804-56c-a5af-7200-29bc-5c99-54f2-ae57.ngrok-free.app',
-        //     ],
-        // },
+        server: {
+            allowedHosts: ['5d08-2804-56c-a5f3-b000-9c89-d8dc-e58e-6b8c.ngrok-free.app'],
+        },
     },
     components: [
         {

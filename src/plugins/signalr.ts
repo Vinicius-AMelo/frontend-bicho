@@ -1,22 +1,21 @@
-﻿import type { HubConnection } from '@microsoft/signalr';
-import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
+﻿import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 
-declare module '#app' {
-    interface NuxtApp {
-        $signalRConnection: HubConnection;
-    }
-}
+export default defineNuxtPlugin(async nuxtApp => {
+    // Só executa no client
+    if (import.meta.server) return;
 
-export default defineNuxtPlugin(nuxtApp => {
     const connection = new HubConnectionBuilder()
-        .withUrl('http://localhost:5087/jogohub')
+        .withUrl('https://5660-2804-56c-a5f3-b000-9c89-d8dc-e58e-6b8c.ngrok-free.app/jogohub')
         .configureLogging(LogLevel.Information)
         .withAutomaticReconnect()
         .build();
 
-    connection
-        .start()
-        .catch(err => console.error('Erro ao conectar ao SignalR:', err));
+    try {
+        await connection.start();
+        console.log('Conexão SignalR iniciada com sucesso!');
+    } catch (e) {
+        console.error('Erro ao iniciar SignalR:', e);
+    }
 
     nuxtApp.provide('signalRConnection', connection);
 });
