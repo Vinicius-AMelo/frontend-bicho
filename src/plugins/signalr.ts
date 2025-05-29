@@ -1,11 +1,11 @@
-﻿import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
+import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 
 export default defineNuxtPlugin(async nuxtApp => {
-    // Só executa no client
+    const config = useRuntimeConfig();
     if (import.meta.server) return;
 
     const connection = new HubConnectionBuilder()
-        .withUrl('https://5660-2804-56c-a5f3-b000-9c89-d8dc-e58e-6b8c.ngrok-free.app/jogohub')
+        .withUrl(config.public.apiBaseUrl + '/jogohub')
         .configureLogging(LogLevel.Information)
         .withAutomaticReconnect()
         .build();

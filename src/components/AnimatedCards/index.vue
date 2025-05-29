@@ -5,16 +5,18 @@
                 v-for="(number, index) in props.numbers"
                 :key="number"
                 :style="{ transform: `translateX(${animation.position}px)` }"
-                class="card-wrapper min-w-20 mx-2 h-40 rounded-md overflow-hidden"
+                class="card-wrapper min-w-20 mx-2 h-40 rounded-md overflow-hidden shadow-lg"
             >
                 <div
                     :class="{ flipped: flippedCards.includes(index) }"
                     class="card relative w-full h-full"
                 >
-                    <div class="card-back flex items-center justify-center bg-gray-400">?</div>
+                    <div class="card-back flex items-center justify-center bg-gray-400">🦧​</div>
                     <div class="card-front flex items-center justify-center bg-green-400">
                         {{ number }}
                     </div>
+                    
+                    
                 </div>
             </div>
             <div
