@@ -1,15 +1,16 @@
 ﻿<template>
-    <div class="gradient h-[100vh]">
+    <div class="gradient py-8">
         <div class="login-paw flex flex-col justify-center items-center gap-6 w-full h-full">
             <Brand />
             <BetDisplay
                 :disabled="disabled"
                 :mensagem="mensagem"
+                :option="aposta?.[0] || 26"
                 :sorteio="sorteio"
                 :submit="enviarAposta"
             />
 
-            <div class="bg-gray-700 p-8 rounded-sm">
+            <div class="">
                 <BetSelector :select-bet="selectBet" />
             </div>
         </div>
@@ -21,7 +22,7 @@ import type { HubConnection } from '@microsoft/signalr';
 
 const aposta = ref<number[] | null>(null);
 const sorteio = ref<number[]>([0, 0, 0, 0, 0]);
-const mensagem = ref<string>('Selecione um animal:');
+const mensagem = ref<string>('');
 const disabled = ref<boolean>(false);
 
 let connection: HubConnection | null = null;
@@ -61,7 +62,7 @@ onMounted(() => {
     });
 
     connection.on('ApostaConfirmada', (numeros: number[]) => {
-        mensagem.value = `Aposta confirmada! Números: ${numeros.join(', ')}`;
+        mensagem.value = `Aposta confirmada!`;
         disabled.value = true;
     });
 

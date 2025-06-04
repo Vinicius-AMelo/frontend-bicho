@@ -1,31 +1,29 @@
 ﻿<template>
-    <div class="w-[480px]">
+    <div class="w-[384px]">
         <div class="w-full flex overflow-hidden">
             <div
                 v-for="(number, index) in props.numbers"
                 :key="number"
                 :style="{ transform: `translateX(${animation.position}px)` }"
-                class="card-wrapper min-w-20 mx-2 h-40 rounded-md overflow-hidden"
+                class="card-wrapper min-w-[80px] mx-2 h-[120px] rounded-md overflow-hidden"
             >
                 <div
                     :class="{ flipped: flippedCards.includes(index) }"
                     class="card relative w-full h-full"
                 >
                     <div class="card-back flex items-center justify-center bg-gray-400">?</div>
-                    <div class="card-front flex items-center justify-center bg-green-400">
-                        {{ number }}
-                    </div>
+                    <BetSelectorCard :option="number" class="card-front" />
                 </div>
             </div>
             <div
                 :style="{ transform: `translateX(${animation.position}px)` }"
-                class="min-w-20 mx-2 h-40 rounded-md bg-gray-400 flex items-center justify-center"
+                class="w-[80px] mx-2 h-[120px] rounded-md bg-gray-400 flex items-center justify-center"
             >
                 ?
             </div>
             <div
                 :style="{ transform: `translateX(${animation.position}px)` }"
-                class="min-w-20 mx-2 h-40 rounded-md bg-gray-400 flex items-center justify-center"
+                class="w-[80px] mx-2 h-[120px] rounded-md bg-gray-400 flex items-center justify-center"
             >
                 ?
             </div>

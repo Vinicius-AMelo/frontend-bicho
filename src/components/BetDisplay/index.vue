@@ -1,13 +1,14 @@
 ﻿<template>
-    <div class="bg-gray-700 p-8 rounded-sm">
-        <div class="flex gap-8 items-end">
-            <div class="flex flex-col gap-4 w-[320px]">
-                <p v-show="!!mensagem">{{ mensagem }}</p>
+    <div class="bg-gray-300 p-4 rounded-sm w-[912px] p-8">
+        <div class="flex gap-8 h-full">
+            <div class="flex flex-col gap-4 w-full">
+                <p>{{ `${option != 26 ? 'Animal Selecionado: ' : 'Selecione um animal'}` }}</p>
 
-                <div class="box flex h-[120px] w-[80px] flex-wrap rounded-sm overflow-hidden">
-                    <img class="w-full h-full" src="../../../public/images/17.png" />
+                <BetSelectorCard :disabled="disabled" :option="option" display />
+
+                <div class="h-4">
+                    <p v-show="!!mensagem">{{ mensagem }}</p>
                 </div>
-
                 <div class="flex w-full gap-1">
                     <TextInput v-model="betValue" class="max-w-[160px]" type="text" />
                     <PrimaryButton
@@ -32,8 +33,10 @@
                 </PrimaryButton>
             </div>
 
-            <div>
-                <h2 class="text-center">Sorteio ao vivo</h2>
+            <div class="flex flex-col justify-between border-2 rounded-sm border-b-gray-700 p-4">
+                <div>
+                    <h2 class="text-center border-b-1 pb-1">Sorteio ao vivo</h2>
+                </div>
 
                 <AnimatedCards :numbers="sorteio" />
             </div>
@@ -47,6 +50,7 @@ const { sorteio, submit } = defineProps<{
     submit: (betValue: number) => void;
     mensagem: string | null;
     disabled: boolean;
+    option: number | null;
 }>();
 
 const betValue = ref<number>(0);
