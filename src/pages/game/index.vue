@@ -20,6 +20,8 @@
 <script lang="ts" setup>
 import type { HubConnection } from '@microsoft/signalr';
 
+const authStore = useAuthStore();
+
 const aposta = ref<number[] | null>(null);
 const sorteio = ref<number[]>([0, 0, 0, 0, 0]);
 const mensagem = ref<string>('');
@@ -35,7 +37,7 @@ async function enviarAposta(betValue: number) {
 
     if (connection && connection.state === 'Connected') {
         try {
-            await connection.invoke('CreateBet', aposta.value, 1, betValue);
+            await connection.invoke('CreateBet', aposta.value, Number(authStore.userId), betValue);
         } catch (e) {
             console.log(e);
         }

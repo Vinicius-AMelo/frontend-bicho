@@ -1,44 +1,22 @@
 ﻿<template>
     <div class="gradient">
-        <div
-            class="login-paw flex h-[100vh] w-full flex-col items-center justify-center gap-14"
-        >
+        <div class="login-paw flex h-[100vh] w-full flex-col items-center justify-center gap-14">
             <Brand />
             <form
                 class="flex flex-col items-center justify-center gap-6"
-                @submit="e => onSubmit(e)"
+                @submit.prevent="handleRegister"
             >
-                <TextInput
-                    v-model="authForm.name"
-                    placeholder="Nome"
-                    type="text"
-                />
+                <TextInput v-model="registerForm.name" placeholder="Nome" type="text" />
 
-                <TextInput
-                    v-model="authForm.email"
-                    placeholder="Email"
-                    type="text"
-                />
+                <TextInput v-model="registerForm.email" placeholder="Email" type="text" />
 
-                <TextInput
-                    v-model="authForm.password"
-                    placeholder="Senha"
-                    type="password"
-                />
+                <TextInput v-model="registerForm.password" placeholder="Senha" type="password" />
 
                 <div class="flex gap-12">
-                    <PrimaryCheckbox
-                        v-model="remember"
-                        label="Lembrar de mim"
-                    />
-                    <a class="text-white underline" href="/login">
-                        Esqueceu a senha?
-                    </a>
+                    <a class="text-white underline" href="/login">Esqueceu a senha?</a>
                 </div>
 
-                <PrimaryButton class="max-w-[260px]" type="submit">
-                    Login
-                </PrimaryButton>
+                <PrimaryButton class="max-w-[260px]" type="submit">Registrar</PrimaryButton>
 
                 <p class="text-white">
                     Já possui uma conta?
@@ -52,33 +30,42 @@
 </template>
 
 <script lang="ts" setup>
+import { useAuthStore } from '~/stores/auth';
 import type { AuthRegisterFormType } from '~/types/auth';
-import { useApi } from '~/composables/api';
 
-async function onSubmit(e: Event) {
-    e.preventDefault();
-    const { data, error, status } = await useApi<{ token: string }>(
-        '/auth/register',
-        {
-            method: 'POST',
-            body: authForm,
-            headers: {
-                accept: 'application/json',
-            },
-        }
-    );
-    console.log(data);
-    console.log(error);
-    console.log(status);
-    // await navigateTo('/dashboard');
-}
+definePageMeta({
+    layout: 'auth',
+});
 
-const remember = ref<boolean>(true);
-const authForm = reactive<AuthRegisterFormType>({
+const authStore = useAuthStore();
+const router = useRouter();
+
+const registerForm = reactive<AuthRegisterFormType>({
     name: '',
     email: '',
     password: '',
 });
+const error = ref<string | null>(null);
+
+async function handleRegister() {
+    error.value = null;
+
+    if (!registerForm.name || !registerForm.email || !registerForm.password) {
+        error.value = 'Por favor, preencha todos os campos.';
+        return;
+    }
+    try {
+        await authStore.register(registerForm);
+        router.push('/game');
+    } catch (e: any) {
+        error.value = e.message || 'Ocorreu um erro durante o registro.';
+        console.error('Register page error:', e);
+    }
+}
+
+if (import.meta.client && authStore.isAuthenticated) {
+    router.replace('/game');
+}
 </script>
 
 <style scoped></style>

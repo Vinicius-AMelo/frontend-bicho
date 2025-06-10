@@ -1,17 +1,18 @@
 ﻿<template>
     <div class="gradient">
-        <div class="login-paw flex h-[100vh] w-full flex-col items-center justify-center gap-14">
+        <div
+            class="login-paw flex min-h-[100vh] h-full w-full flex-col items-center justify-center gap-14"
+        >
             <Brand />
             <form
                 class="flex flex-col items-center justify-center gap-6"
-                @submit="e => onSubmit(e)"
+                @submit.prevent="handleLogin"
             >
-                <TextInput v-model="authForm.email" placeholder="Email" type="text" />
+                <TextInput v-model="loginForm.email" placeholder="Email" type="text" />
 
-                <TextInput v-model="authForm.password" placeholder="Senha" type="password" />
+                <TextInput v-model="loginForm.password" placeholder="Senha" type="password" />
 
                 <div class="flex gap-12">
-                    <PrimaryCheckbox v-model="remember" label="Lembrar de mim" />
                     <a class="text-white underline" href="/login">Esqueceu a senha?</a>
                 </div>
 
@@ -29,34 +30,42 @@
 </template>
 
 <script lang="ts" setup>
-import { useApi } from '~/composables/api';
+import { useAuthStore } from '~/stores/auth';
 import type { AuthLoginFormType } from '~/types/auth';
 
-async function onSubmit(e: Event) {
-    e.preventDefault();
+definePageMeta({
+    layout: 'auth',
+});
 
-    const { data, error, status } = await useApi<{ token: string }>('/auth/login', {
-        method: 'POST',
-        body: JSON.stringify({ ...authForm }),
-        headers: {
-            accept: 'application/json',
-        },
-    });
+const authStore = useAuthStore();
+const router = useRouter();
+const route = useRoute();
 
-    if (error.value?.statusCode === 401) return console.log(error);
-    if (status.value != 'success') return console.log(error);
-    if (!data.value?.token) return console.log(error);
-
-    const token = useCookie<string>('token', { maxAge: 60 * 15, path: '/' });
-    token.value = data.value.token;
-    return navigateTo('/dashboard');
-}
-
-const remember = ref<boolean>(true);
-const authForm = reactive<AuthLoginFormType>({
+const loginForm = reactive<AuthLoginFormType>({
     email: '',
     password: '',
 });
+const error = ref<string | null>(null);
+
+async function handleLogin() {
+    error.value = null;
+    if (!loginForm.email || !loginForm.password) {
+        error.value = 'Por favor, preencha email e senha.';
+        return;
+    }
+    try {
+        await authStore.login(loginForm);
+        const redirectPath = (route.query.redirect as string) || '/game';
+        router.push(redirectPath);
+    } catch (e: any) {
+        error.value = e.message || 'Ocorreu um erro durante o login.';
+        console.error('Login page error:', e);
+    }
+}
+
+if (import.meta.client && authStore.isAuthenticated) {
+    router.replace('/game');
+}
 </script>
 
 <style scoped></style>
