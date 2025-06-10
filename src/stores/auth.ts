@@ -132,6 +132,14 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
+        updateUserBalance(newBalance: number) {
+            if (this.user) {
+                this.user.balance = newBalance;
+            } else {
+                console.warn('Tentativa de atualizar o saldo sem um usuário logado.');
+            }
+        },
+
         initializeAuth() {
             if (import.meta.client) {
                 const token = localStorage.getItem('authToken');
